@@ -9,6 +9,7 @@
 
 
 import Foundation
+import FirebaseAuth
 
 class RegistrationViewModel: ObservableObject {
     @Published var username: String = ""
@@ -19,10 +20,20 @@ class RegistrationViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var emailValidationFailed = false
     @Published var usernameValidationFailed = false
+    @Published var showAlert = false
+    @Published var authError: AuthError?
     
     func createUser() async throws {
-       try await AuthService.shared.createUser(email: email, password: password, username: username)
+        //try await AuthService.shared.createUser(email: email, password: password, username: username)
+        do {
+            try await AuthService.shared.createUser(email: email, password: password, username: username)
+        } catch {
+            let authError = AuthErrorCode.Code(rawValue: (error as NSError).code)
+            self.showAlert = true
+            self.authError = AuthError(authErrorCode: authError ?? .userNotFound)
+        }
     }
+    
     
     @MainActor
     func validateEmail() async throws {
@@ -42,8 +53,8 @@ class RegistrationViewModel: ObservableObject {
         self.isLoading = false
     }
     
-    
 }
+
 /*class RegistrationViewModel: ObservableObject {
     @Published var username = ""
     @Published var email = ""

@@ -69,6 +69,7 @@ class AuthService {
         self.userSession = nil
         self.user = nil
         try? Auth.auth().signOut()
+        InboxService.shared.reset()
     }
     
     private func loadCurrentUserData() {

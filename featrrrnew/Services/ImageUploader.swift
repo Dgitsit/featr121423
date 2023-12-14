@@ -12,6 +12,7 @@ import FirebaseStorage
 enum UploadType {
     case profile
     case post
+    case message
     
     var filePath: StorageReference {
         let filename = NSUUID().uuidString
@@ -20,6 +21,8 @@ enum UploadType {
             return Storage.storage().reference(withPath: "/profile_images/\(filename)")
         case .post:
             return Storage.storage().reference(withPath: "/post_images/\(filename)")
+        case .message:
+            return Storage.storage().reference(withPath: "/message_images/\(filename)")
         }
     }
 }
@@ -27,6 +30,7 @@ enum UploadType {
 struct ImageUploader {
     static func uploadImage(image: UIImage, type: UploadType) async throws -> String? {
         guard let imageData = image.jpegData(compressionQuality: 0.5) else { return nil }
+        //let filename = NSUUID().uuidString
         let ref = type.filePath
         
         do {

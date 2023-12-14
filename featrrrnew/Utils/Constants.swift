@@ -18,3 +18,11 @@ let COLLECTION_NOTIFICATIONS = Firestore.firestore().collection("notifications")
 let COLLECTION_MESSAGES = Firestore.firestore().collection("messages")
 
 
+
+struct FirestoreConstants {
+    static let Root = Firestore.firestore()
+    
+    static let UsersCollection = Root.collection("users")
+    
+    static let MessagesCollection = Root.collection("messages")
+}

@@ -11,6 +11,10 @@ import Firebase
 class InboxService {
     @Published var documentChanges = [DocumentChange]()
     
+    static let shared = InboxService()
+    
+    private var firestoreListener: ListenerRegistration?
+    
     func observeRecentMessages() {
         guard let uid = Auth.auth().currentUser?.uid else {return}
         
@@ -21,5 +25,11 @@ class InboxService {
             guard let changes = snapshot?.documentChanges.filter({$0.type == .added || $0.type == .modified}) else {return}
             self.documentChanges = changes
         }
+    }
+    
+    func reset() {
+        self.firestoreListener?.remove()
+        self.firestoreListener = nil
+        self.documentChanges.removeAll()
     }
 }
